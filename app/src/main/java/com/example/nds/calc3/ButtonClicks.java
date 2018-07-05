@@ -30,8 +30,11 @@ public class ButtonClicks {
     }
     public void onRemoveClick(View v){
         String text = textViewMain.getText().toString();
-        if(text.length()==1)
+        if(text.length()==1){
             textViewMain.setText("0");
+            openBrackets=0;
+            closeBracets=0;
+        }
         else
             textViewMain.setText(text.substring(0,text.length()-1));
     }
@@ -44,6 +47,8 @@ public class ButtonClicks {
             textViewHistory.setText(textViewHistory.getText().toString() + '\n' + textViewMain.getText().toString() + "=" + calculator.startCalculate(textViewMain.getText().toString()));
         }
         textViewMain.setText("0");
+        openBrackets=0;
+        closeBracets=0;
 
     }
     public void onClearClick(View v){
@@ -53,7 +58,7 @@ public class ButtonClicks {
     }
     public void onBracetsClick(View v){
         String text =textViewMain.getText().toString();
-        if(text.length()>2) {
+        if(text.length()>1) {
             if (v.getTag().toString().equals("(")) {
                 if (isOperation(text.substring(text.length() - 1, text.length()))) {
                     textViewMain.setText(text + "(");
@@ -67,6 +72,10 @@ public class ButtonClicks {
                     closeBracets++;
                 }
             }
+        }
+        else{
+            textViewMain.setText("(");
+            openBrackets++;
         }
 
     }
