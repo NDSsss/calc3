@@ -1,6 +1,8 @@
 package com.example.nds.calc3;
-import java.io.*;
-import java.util.*;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.StringTokenizer;
 public class Calculator {
     public String startCalculate(String text) {
             String sIn;

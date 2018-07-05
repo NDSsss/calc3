@@ -1,44 +1,57 @@
 package com.example.nds.calc3;
 
-import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
-    TextView textViewMain,textViewHistory;
+    TextView textViewMain, textViewHistory;
     Calculator calculator;
     ButtonClicks buttonClicks;
-    public static final String MAINTEXT="textViewMain",HISTROYTEXT="textViewHistory";
+    public static final String MAINTEXT = "textViewMain", HISTROYTEXT = "textViewHistory";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textViewMain = (TextView)findViewById(R.id.textViewMain);
+        textViewMain = (TextView) findViewById(R.id.textViewMain);
         textViewMain.setMovementMethod(new ScrollingMovementMethod());
-        textViewHistory = (TextView)findViewById(R.id.textViewHistory);
+        textViewHistory = (TextView) findViewById(R.id.textViewHistory);
         textViewHistory.setMovementMethod(new ScrollingMovementMethod());
-        calculator=new Calculator();
-        buttonClicks = new ButtonClicks(textViewMain,textViewHistory);
+        calculator = new Calculator();
+        buttonClicks = new ButtonClicks(new TextViewsInterface() {
+            @Override
+            public void setMainText(String text) {
+                textViewMain.setText(text);
+            }
+
+            @Override
+            public void setHistoryText(String text) {
+                textViewHistory.setText(text);
+            }
+
+
+            @Override
+            public String getHistoryText() {
+                return textViewHistory.getText().toString();
+            }
+        });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(MAINTEXT,textViewMain.getText().toString());
-        outState.putString(HISTROYTEXT,textViewHistory.getText().toString());
+        outState.putString(MAINTEXT, textViewMain.getText().toString());
+        outState.putString(HISTROYTEXT, textViewHistory.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             textViewMain.setText(savedInstanceState.getString(MAINTEXT));
             textViewHistory.setText(savedInstanceState.getString(HISTROYTEXT));
         }
@@ -72,7 +85,6 @@ public class MainActivity extends AppCompatActivity{
     public void onBracetsClick(View view) {
         buttonClicks.onBracetsClick(textViewMain.getText().toString(), view.getTag().toString());
     }
-    public interface textViewInterface{
-        void setTextViewMainText(String text);
-    }
+
+
 }
