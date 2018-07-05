@@ -46,30 +46,33 @@ public class MainActivity extends AppCompatActivity{
 
 
     public void onPointClick(View view) {
-        buttonClicks.onPointClick(view);
+        buttonClicks.onPointClick(textViewMain.getText().toString());
     }
 
     public void onFigureClick(View view) {
-        buttonClicks.onFigureClick(view);
+        buttonClicks.onFigureClick(textViewMain.getText().toString(), view.getTag().toString());
     }
 
     public void onOperationClick(View view) {
-        buttonClicks.onOperationClick(view);
+        buttonClicks.onOperationClick(textViewMain.getText().toString(), view.getTag().toString());
     }
 
     public void onEqualClick(View view) {
-        buttonClicks.onEqualClick(view);
+        buttonClicks.onEqualClick(textViewMain.getText().toString());
     }
 
     public void onClearClick(View view) {
-        buttonClicks.onClearClick(view);
+        buttonClicks.onClearClick();
     }
 
     public void onRemoveClick(View view) {
-        buttonClicks.onRemoveClick(view);
+        buttonClicks.onRemoveClick(textViewMain.getText().toString());
     }
 
     public void onBracetsClick(View view) {
-        buttonClicks.onBracetsClick(view);
+        buttonClicks.onBracetsClick(textViewMain.getText().toString(), view.getTag().toString());
+    }
+    public interface textViewInterface{
+        void setTextViewMainText(String text);
     }
 }

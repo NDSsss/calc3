@@ -14,22 +14,19 @@ public class ButtonClicks {
         calculator = new Calculator();
     }
 
-    public void onFigureClick(View v) {
-        String text = textViewMain.getText().toString();
+    public void onFigureClick(String text, String tag) {
         if (text.equals("0"))
-            textViewMain.setText(v.getTag().toString());
+            textViewMain.setText(tag);
         else
-            textViewMain.setText(text + v.getTag().toString());
+            textViewMain.setText(text + tag);
     }
 
 
-    public void onOperationClick(View v){
-        String text = textViewMain.getText().toString();
+    public void onOperationClick(String text, String tag){
         if(isFigure(text.substring(text.length()-1,text.length()))||text.substring(text.length()-1,text.length()).equals(")"))
-            textViewMain.setText(text+v.getTag().toString());
+            textViewMain.setText(text+tag);
     }
-    public void onRemoveClick(View v){
-        String text = textViewMain.getText().toString();
+    public void onRemoveClick(String text){
         if(text.length()==1){
             textViewMain.setText("0");
             openBrackets=0;
@@ -38,28 +35,27 @@ public class ButtonClicks {
         else
             textViewMain.setText(text.substring(0,text.length()-1));
     }
-    public void onEqualClick(View v){
+    public void onEqualClick(String text){
 
-        if(textViewHistory.getText().toString().equals("")){
-            textViewHistory.setText(textViewMain.getText().toString() + "=" + calculator.startCalculate(textViewMain.getText().toString()));
+        if(text.equals("")){
+            textViewHistory.setText(text + "=" + calculator.startCalculate(text));
         }
         else {
-            textViewHistory.setText(textViewHistory.getText().toString() + '\n' + textViewMain.getText().toString() + "=" + calculator.startCalculate(textViewMain.getText().toString()));
+            textViewHistory.setText(textViewHistory.getText().toString() + '\n' + text + "=" + calculator.startCalculate(text));
         }
         textViewMain.setText("0");
         openBrackets=0;
         closeBracets=0;
 
     }
-    public void onClearClick(View v){
+    public void onClearClick(){
         textViewMain.setText("0");
         openBrackets=0;
         closeBracets=0;
     }
-    public void onBracetsClick(View v){
-        String text =textViewMain.getText().toString();
+    public void onBracetsClick(String text,String tag){
         if(text.length()>1) {
-            if (v.getTag().toString().equals("(")) {
+            if (tag.equals("(")) {
                 if (isOperation(text.substring(text.length() - 1, text.length()))) {
                     textViewMain.setText(text + "(");
                     openBrackets++;
@@ -79,8 +75,7 @@ public class ButtonClicks {
         }
 
     }
-    public void onPointClick(View v){
-        String text=textViewMain.getText().toString();
+    public void onPointClick(String text){
         int start=1;
         char c;
         String ch;
