@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewHistory"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text=""
+
+
+        />
+
+    <TextView
+        android:id="@+id/textViewMain"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_columnSpan="2"
+        android:text="0"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHistory" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="333dp"
+        android:columnCount="4"
+        android:minHeight="350dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMain">
+
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="1"
+            android:text="1" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="2"
+            android:text="2" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="3"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/buttonMul"
+            android:layout_rowWeight="1"
+            android:onClick="onOperationClick"
+            android:tag="*"
+            android:layout_gravity="fill"
+            android:text="*" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="5"
+            android:text="4" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="5"
+            android:text="5" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="6"
+            android:text="6" />
+
+        <Button
+            android:id="@+id/buttonSub"
+            android:layout_rowWeight="1"
+            android:onClick="onOperationClick"
+            android:tag="-"
+            android:layout_gravity="fill"
+            android:text="-" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="7"
+            android:text="7" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="8"
+            android:text="8" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="9"
+            android:text="9" />
+
+        <Button
+            android:id="@+id/buttonDiv"
+            android:layout_rowWeight="1"
+            android:onClick="onOperationClick"
+            android:tag="/"
+            android:layout_gravity="fill"
+            android:text="/" />
+
+        <Button
+            android:layout_rowWeight="1"
+            android:onClick="onFigureClick"
+            android:tag="0"
+            android:text="0" />
+
+        <Button
+            android:id="@+id/buttonPoint"
+            android:layout_rowWeight="1"
+            android:onClick="onPointClick"
+            android:tag="."
+            android:text="." />
+
+        <Button
+            android:id="@+id/buttonEqual"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:onClick="onEqualClick"
+            android:tag="="
+            android:text="=" />
+
+        <Button
+            android:id="@+id/buttonSum"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:onClick="onOperationClick"
+            android:tag="+"
+            android:text="+" />
+
+        <Button
+            android:id="@+id/buttonClean"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:onClick="onClearClick"
+            android:tag="C"
+            android:text="C" />
+
+        <Button
+            android:id="@+id/buttonRemove"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:onClick="onRemoveClick"
+            android:tag="←"
+            android:text="←" />
+
+        <Button
+            android:id="@+id/buttonLeftBracket"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:onClick="onBracetsClick"
+            android:tag="("
+            android:text="(" />
+
+        <Button
+            android:id="@+id/buttonRightBarchet"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:onClick="onBracetsClick"
+            android:tag=")"
+            android:text=")" />
+    </GridLayout>
+</android.support.constraint.ConstraintLayout>
