@@ -12,9 +12,6 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity{
 
     TextView textViewMain,textViewHistory;
-    private int pointsCount=0,openBrackets=0,closeBracets=0;
-    boolean figurePressed=false,operationPressed=true, pointPressed =false,pointEnabled=false,
-            operationsEnabled=false;
     Calculator calculator;
     ButtonClicks buttonClicks;
     public static final String MAINTEXT="textViewMain",HISTROYTEXT="textViewHistory";
