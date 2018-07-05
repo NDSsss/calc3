@@ -1,292 +1,148 @@
 package com.example.nds.calc3;
+import java.io.*;
+import java.util.*;
+public class Calculator {
+    public String startCalculate(String text) {
+            String sIn;
 
-/**
- *@about This is program named "calculator", for calculating string entered by user.
- *
- *@author Shumilin "Shuma" Alexandr
- */
-public class Calculator //Main class
-{
-    private StringBuilder cstring = new StringBuilder();//for user string storage
-    private boolean PlusSign = true;//saving result sign
-    private int CloseBracket,OpenBracket;//saving start and finish substring positions
-    private int FinishPos = 0, StartPos = 0;//saving start and finish expression part positions
-
-
-
-    private int valueCalc(String input)//calculating how many slots are needed for secondary array
-    {
-        int Slots = 0;
-        for (int i = 0; i < input.length(); i++)
-        {
-            if ((input.charAt(i) == '+') || (input.charAt(i) == '-') ||
-                    (input.charAt(i) == '*') || (input.charAt(i) == '/')||
-                    (input.charAt(i) == ')')|| (input.charAt(i) == '('))
-            {
-                Slots++;
+            try {
+                sIn = opn(text);
+                return (String.valueOf(calculate(sIn)));
+            } catch (Exception e) {
+                return e.getMessage();
             }
         }
-        return Slots;
-    }
-    public String calculate(String input)//main method
-    {
-        int[] CharsPos = new int[valueCalc(input)+2];//"+2" because also needed
-        //start and finish string positions
-        float a = 0, b = 0;//for parse parts
-        Float c = null;//result between parts
-        cstring.delete(0, cstring.length());//cleaning
-        cstring.append(input);
-        /////////////////////////////////////////////////////////////////////////
-//<first priority block>
-        for (int i = 0; i < cstring.length(); i++)
-        {
-            if(cstring.charAt(i)=='(')
-            {
-                OpenBracket=i;
+
+        /**
+         * Преобразовать строку в обратную польскую нотацию
+         * @param sIn Входная строка
+         * @return Выходная строка в обратной польской нотации
+         */
+        private static String opn(String sIn) throws Exception {
+            StringBuilder sbStack = new StringBuilder(""), sbOut = new StringBuilder("");
+            char cIn, cTmp;
+
+            for (int i = 0; i < sIn.length(); i++) {
+                cIn = sIn.charAt(i);
+                if (isOp(cIn)) {
+                    while (sbStack.length() > 0) {
+                        cTmp = sbStack.substring(sbStack.length()-1).charAt(0);
+                        if (isOp(cTmp) && (opPrior(cIn) <= opPrior(cTmp))) {
+                            sbOut.append(" ").append(cTmp).append(" ");
+                            sbStack.setLength(sbStack.length()-1);
+                        } else {
+                            sbOut.append(" ");
+                            break;
+                        }
+                    }
+                    sbOut.append(" ");
+                    sbStack.append(cIn);
+                } else if ('(' == cIn) {
+                    sbStack.append(cIn);
+                } else if (')' == cIn) {
+                    cTmp = sbStack.substring(sbStack.length()-1).charAt(0);
+                    while ('(' != cTmp) {
+                        if (sbStack.length() < 1) {
+                            throw new Exception("Ошибка разбора скобок. Проверьте правильность выражения.");
+                        }
+                        sbOut.append(" ").append(cTmp);
+                        sbStack.setLength(sbStack.length()-1);
+                        cTmp = sbStack.substring(sbStack.length()-1).charAt(0);
+                    }
+                    sbStack.setLength(sbStack.length()-1);
+                } else {
+                    // Если символ не оператор - добавляем в выходную последовательность
+                    sbOut.append(cIn);
+                }
             }
-            if(cstring.charAt(i)==')')//for locating max priority
-            {
-                CloseBracket=i;
-                String subString=new String();
-                subString=cstring.substring(OpenBracket+1, CloseBracket);
-                cstring.delete(OpenBracket, CloseBracket+1);
-                StringBuilder mainString=new StringBuilder(cstring);
-                calculate(subString);
-                mainString.insert(OpenBracket,cstring.toString());
-                cstring.delete(0, cstring.length());
-                cstring.insert(0, mainString.toString());
-                calculate(cstring.toString());
+
+            // Если в стеке остались операторы, добавляем их в входную строку
+            while (sbStack.length() > 0) {
+                sbOut.append(" ").append(sbStack.substring(sbStack.length()-1));
+                sbStack.setLength(sbStack.length()-1);
             }
+
+            return  sbOut.toString();
         }
-//</first priority block>
-        ////////////////////////////////////////////////////////////////////////
-//<secondary priority block>
-        for (int i = 0; i < cstring.length(); i++)
-        {
-            if (cstring.charAt(i) == '*')
-            {
-                CharsPos[0]=0;
-                for (int j = 0,  k = 1; j < cstring.length()-1; j++)
-                {
-                    if ((cstring.charAt(j) == '+') || (cstring.charAt(j) == '-') ||
-                            (cstring.charAt(j) == '*') || (cstring.charAt(j) == '/')||
-                            (cstring.charAt(j) == '(')|| (cstring.charAt(j) == ')'))
-                    {
-                        CharsPos[k] = j+1;
-                        k++;
-                    }
-                    CharsPos[CharsPos.length-1]=cstring.length()+1;
-                }
-                for(int k=0;k<CharsPos.length;k++)
-                {
 
-                    if(CharsPos[k]==i+1)
-                    {
-                        StartPos=CharsPos[k-1];
-                        FinishPos=CharsPos[k+1]-1;
-                    }
-                }
-
-                a = Float.parseFloat(cstring.substring(StartPos, i));
-                b = Float.parseFloat(cstring.substring(i + 1, FinishPos));
-                cstring.delete(StartPos, FinishPos);
-                c = a * b;
-                cstring.insert(StartPos, c.toString());
-                calculate(cstring.toString());
-                break;
+        /**
+         * Функция проверяет, является ли текущий символ оператором
+         */
+        private static boolean isOp(char c) {
+            switch (c) {
+                case '-':
+                case '+':
+                case '*':
+                case '/':
+                    return true;
             }
-            if (cstring.charAt(i) == '/')
-            {
-                CharsPos[0]=0;
-                for (int j = 0,  k = 1; j < cstring.length()-1; j++)
-                {
-                    if ((cstring.charAt(j) == '+') || (cstring.charAt(j) == '-') ||
-                            (cstring.charAt(j) == '*') || (cstring.charAt(j) == '/')||
-                            (cstring.charAt(j) == '(')|| (cstring.charAt(j) == ')'))
-                    {
-                        CharsPos[k] = j+1;
-                        k++;
-                    }
-                    CharsPos[CharsPos.length-1]=cstring.length()+1;
-                }
-                for(int k=0;k<CharsPos.length;k++)
-                {
-
-                    if(CharsPos[k]==i+1)
-                    {
-                        StartPos=CharsPos[k-1];
-                        FinishPos=CharsPos[k+1]-1;
-                    }
-                }
-
-                a = Float.parseFloat(cstring.substring(StartPos, i));
-                b = Float.parseFloat(cstring.substring(i + 1, FinishPos));
-                cstring.delete(StartPos, FinishPos);
-                c = a / b;
-                cstring.insert(StartPos, c.toString());
-                calculate(cstring.toString());
-                break;
-            }
-
+            return false;
         }
-        for (int i = 0; i < cstring.length(); i++)
-        {
-            if ((cstring.charAt(i) == '*') || (cstring.charAt(i) == '/'))
-            {
-                calculate(cstring.toString());
+
+        /**
+         * Возвращает приоритет операции
+         * @param op char
+         * @return byte
+         */
+        private static byte opPrior(char op) {
+            switch (op) {
+                case '^':
+                    return 3;
+                case '*':
+                case '/':
+                case '%':
+                    return 2;
             }
+            return 1; // Тут остается + и -
         }
-//</secondary priority block>
-        ////////////////////////////////////////////////////////////////////////
-        //<third priority block>
-        for (int i = 0; i < cstring.length(); i++)
-        {
-            if ((cstring.charAt(i) == '+') && (PlusSign == true))
-            {
-                CharsPos[0]=0;
-                for (int j = 0,  k = 1; j < cstring.length()-1; j++)
-                {
-                    if ((cstring.charAt(j) == '+') || (cstring.charAt(j) == '-') ||
-                            (cstring.charAt(j) == '*') || (cstring.charAt(j) == '/')||
-                            (cstring.charAt(j) == '(')|| (cstring.charAt(j) == ')'))
-                    {
-                        CharsPos[k] = j+1;
-                        k++;
-                    }
-                    CharsPos[CharsPos.length-1]=cstring.length()+1;
-                }
-                for(int k=0;k<CharsPos.length;k++)
-                {
 
-                    if(CharsPos[k]==i+1)
-                    {
-                        StartPos=CharsPos[k-1];
-                        FinishPos=CharsPos[k+1]-1;
+        /**
+         * Считает выражение, записанное в обратной польской нотации
+         * @param sIn
+         * @return double result
+         */
+        private static double calculate(String sIn) throws Exception {
+            double dA = 0, dB = 0;
+            String sTmp;
+            Deque<Double> stack = new ArrayDeque<Double>();
+            StringTokenizer st = new StringTokenizer(sIn);
+            while(st.hasMoreTokens()) {
+                try {
+                    sTmp = st.nextToken().trim();
+                    if (1 == sTmp.length() && isOp(sTmp.charAt(0))) {
+                        if (stack.size() < 2) {
+                            throw new Exception("Неверное количество данных в стеке для операции " + sTmp);
+                        }
+                        dB = stack.pop();
+                        dA = stack.pop();
+                        switch (sTmp.charAt(0)) {
+                            case '+':
+                                dA += dB;
+                                break;
+                            case '-':
+                                dA -= dB;
+                                break;
+                            case '/':
+                                dA /= dB;
+                                break;
+                            case '*':
+                                dA *= dB;
+                                break;
+                            default:
+                                throw new Exception("Недопустимая операция " + sTmp);
+                        }
+                        stack.push(dA);
+                    } else {
+                        dA = Double.parseDouble(sTmp);
+                        stack.push(dA);
                     }
+                } catch (Exception e) {
+                    throw new Exception("Недопустимый символ в выражении");
                 }
-                a = Float.parseFloat(cstring.substring(StartPos, i));
-                b = Float.parseFloat(cstring.substring(i + 1, FinishPos));
-                cstring.delete(StartPos, FinishPos);
-                c = a + b;
-                cstring.insert(StartPos, c.toString());
-                break;
             }
-            if ((cstring.charAt(i) == '+') && (PlusSign == false))
-            {
-                CharsPos[0]=0;
-                for (int j = 0,  k = 1; j < cstring.length()-1; j++)
-                {
-                    if ((cstring.charAt(j) == '+') || (cstring.charAt(j) == '-') ||
-                            (cstring.charAt(j) == '*') || (cstring.charAt(j) == '/')||
-                            (cstring.charAt(j) == '(')|| (cstring.charAt(j) == ')'))
-                    {
-                        CharsPos[k] = j+1;
-                        k++;
-                    }
-                    CharsPos[CharsPos.length-1]=cstring.length()+1;
-                }
-                for(int k=0;k<CharsPos.length;k++)
-                {
 
-                    if(CharsPos[k]==i+1)
-                    {
-                        StartPos=CharsPos[k-1];
-                        FinishPos=CharsPos[k+1]-1;
-                    }
-                }
-                a = Float.parseFloat(cstring.substring(0, i));
-                b = Float.parseFloat(cstring.substring(i + 1, FinishPos));
-                cstring.delete(0, FinishPos);
-                if (b > a)
-                {
-                    c = b - a;
-                    PlusSign = true;
-                }
-                else
-                {
-                    c = a - b;
-                }
-                cstring.insert(0, c.toString());
-                break;
-            }
-            if ((cstring.charAt(i) == '-') && (PlusSign == true))
-            {
-                CharsPos[0]=0;
-                for (int j = 0,  k = 1; j < cstring.length()-1; j++)
-                {
-                    if ((cstring.charAt(j) == '+') || (cstring.charAt(j) == '-') ||
-                            (cstring.charAt(j) == '*') || (cstring.charAt(j) == '/')||
-                            (cstring.charAt(j) == '(')|| (cstring.charAt(j) == ')'))
-                    {
-                        CharsPos[k] = j+1;
-                        k++;
-                    }
-                    CharsPos[CharsPos.length-1]=cstring.length()+1;
-                }
-                for(int k=0;k<CharsPos.length;k++)
-                {
 
-                    if(CharsPos[k]==i+1)
-                    {
-                        StartPos=CharsPos[k-1];
-                        FinishPos=CharsPos[k+1]-1;
-                    }
-                }
-                a = Float.parseFloat(cstring.substring(0, i));
-                b = Float.parseFloat(cstring.substring(i + 1, FinishPos));
-                cstring.delete(0, FinishPos);
-                if (b > a)
-                {
-                    c = b - a;
-                    PlusSign = false;
-                }
-                else
-                {
-                    c = a - b;
-                }
-                cstring.insert(0, c.toString());
-                break;
-            }
-            if ((cstring.charAt(i) == '-') && (PlusSign == false))
-            {
-                CharsPos[0]=0;
-                for (int j = 0,  k = 1; j < cstring.length()-1; j++)
-                {
-                    if ((cstring.charAt(j) == '+') || (cstring.charAt(j) == '-') ||
-                            (cstring.charAt(j) == '*') || (cstring.charAt(j) == '/')||
-                            (cstring.charAt(j) == '(')|| (cstring.charAt(j) == ')'))
-                    {
-                        CharsPos[k] = j+1;
-                        k++;
-                    }
-                    CharsPos[CharsPos.length-1]=cstring.length()+1;
-                }
-                for(int k=0;k<CharsPos.length;k++)
-                {
-
-                    if(CharsPos[k]==i+1)
-                    {
-                        StartPos=CharsPos[k-1];
-                        FinishPos=CharsPos[k+1]-1;
-                    }
-                }
-                a = Float.parseFloat(cstring.substring(0, i));
-                b = Float.parseFloat(cstring.substring(i + 1, FinishPos));
-                cstring.delete(0, FinishPos);
-                c = a + b;
-                cstring.insert(0, c.toString());
-                break;
-            }
+            return stack.pop();
         }
-        for (int i = 0; i < cstring.length(); i++)
-        {
-            if ((cstring.charAt(i) == '+') || (cstring.charAt(i) == '-'))
-            {
-                calculate(cstring.toString());
-            }
-        }
-        return cstring.toString();
-    }
-    //</third priority block>
 
 }

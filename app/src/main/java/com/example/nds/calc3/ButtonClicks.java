@@ -38,10 +38,10 @@ public class ButtonClicks {
     public void onEqualClick(View v){
 
         if(textViewHistory.getText().toString().equals("")){
-            textViewHistory.setText(textViewMain.getText().toString() + "=" + calculator.calculate(textViewMain.getText().toString()));
+            textViewHistory.setText(textViewMain.getText().toString() + "=" + calculator.startCalculate(textViewMain.getText().toString()));
         }
         else {
-            textViewHistory.setText(textViewHistory.getText().toString() + '\n' + textViewMain.getText().toString() + "=" + calculator.calculate(textViewMain.getText().toString()));
+            textViewHistory.setText(textViewHistory.getText().toString() + '\n' + textViewMain.getText().toString() + "=" + calculator.startCalculate(textViewMain.getText().toString()));
         }
         textViewMain.setText("0");
 
